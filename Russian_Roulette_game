@@ -1,0 +1,52 @@
+import random
+import time
+
+class RussianRoulette:
+    def __init__(self):
+        self.bullet = random.randint(1, 6)
+        self.fired_bullet = 1
+
+    def fire(self):
+        if self.fired_bullet == self.bullet:
+            return True
+        else:
+            self.fired_bullet += 1
+            return False
+
+player1 = input("Enter name of player 1: ")
+player2 = input("Enter name of player 2: ")
+
+roulette = RussianRoulette()
+
+player_turn = input(f"Whose turn to start, {player1} or {player2}: ")
+
+print(f"Starting turn is with {player_turn}")
+print("Type 'fire' to shoot or 'pass' to skip your turn")
+
+pass_count = {
+    player1: 1,
+    player2: 1
+}
+
+while True:
+    action = input("'fire' or 'pass': ")
+    if action not in ["fire", "pass"]:
+        print("Please type only 'fire' or 'pass'")
+        continue
+
+    if action == "fire":
+        print("...")
+        time.sleep(1.8)
+        if roulette.fire():
+            print(f"The bullet fired! {player_turn} died.")
+            break
+        else:
+            print("Empty chamber, turn goes to the other player")
+            player_turn = player2 if player_turn == player1 else player1
+    elif action == "pass":
+        if pass_count[player_turn] > 0:
+            pass_count[player_turn] -= 1
+            print(f"{player_turn} passed their turn. Remaining passes: {pass_count[player_turn]}, turn is with {player_turn}")
+            player_turn = player2 if player_turn == player1 else player1
+        else:
+            print(f"{player_turn}, you have no more passes left, you must 'fire'.")
